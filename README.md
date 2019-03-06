@@ -71,17 +71,20 @@ Topics are enabled and disabled using parameters.  By default, only the `ins` to
 - `imu`(sensor_msgs/Imu)
     - Raw Imu measurements from IMU1 (NED frame)
 - `gps`(inertial_sense/GPS)
-    - unfiltered GPS measurements from onboard GPS unit
+    - Unfiltered GPS measurements from onboard GPS unit
 - `gps/info`(inertial_sense/GPSInfo)
-    - sattelite information and carrier noise ratio array for each sattelite
+    - Satellite information and carrier noise ratio array for each satellite
+- `lla_ref`(geometry_msgs/Vector3)
+    - Current LLA used for NED frame (Latched topic)
+    - Enabled with ~stream_GPS
 - `mag` (sensor_msgs/MagneticField)
     - Raw magnetic field measurement from magnetometer 1
 - `baro` (sensor_msgs/FluidPressure)
     - Raw barometer measurements in kPa
 - `preint_imu` (inertial_sense/DThetaVel)
-    - preintegrated coning and sculling integrals of IMU measurements
+    - Preintegrated coning and sculling integrals of IMU measurements
 - `RTK/info` (inertial_sense/RTKInfo)
-    - information about RTK status
+    - Information about RTK status
 - `RTK/rel` (inertial_sense/RTKRel)
     * Relative measurement between RTK base and rover
 - `gps/obs` (inertial_sense/GNSSObservation)
@@ -115,6 +118,7 @@ Topics are enabled and disabled using parameters.  By default, only the `ins` to
    - Flag to stream preintegrated IMU or not
 * `~stream_GPS`(bool, default: false)
    - Flag to stream GPS
+   - Also streams LLA reference
 * `~stream_GPS_info`(bool, default: false)
    - Flag to stream GPS info messages
 - `stream_GPS_raw` (bool, default: false)
