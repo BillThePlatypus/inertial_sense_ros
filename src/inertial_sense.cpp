@@ -39,7 +39,12 @@ InertialSenseROS::InertialSenseROS() :
   {
     std::vector<double> lla_ref_data(3,0);
     if (nh_private_.hasParam("GPS_ref_lla"))
+    {
+      ROS_INFO("GETTING lla_ref_data");
       nh_private_.getParam("GPS_ref_lla",lla_ref_data);
+    }
+    else
+      ROS_INFO("lla_ref_data not found.");
     geometry_msgs::Vector3 lla_ref_msg;
     lla_ref_msg.x = lla_ref_data[0];
     lla_ref_msg.y = lla_ref_data[1];
@@ -680,6 +685,15 @@ bool InertialSenseROS::set_current_position_as_refLLA(std_srvs::Trigger::Request
   (void)req;
   res.success = true;
   IS_.SendData(DID_FLASH_CONFIG, reinterpret_cast<uint8_t*>(&lla_), sizeof(lla_), offsetof(nvm_flash_cfg_t, refLla));
+  //Update the LLA reference topic, if enabled
+  if(LLA_ref_.enabled)
+  {
+    geometry_msgs::Vector3 msg;
+    msg.x = lla_[0];
+    msg.y = lla_[1];
+    msg.z = lla_[2];
+    LLA_ref_.pub.publish(msg);
+  }
 }
 
 bool InertialSenseROS::perform_mag_cal_srv_callback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
