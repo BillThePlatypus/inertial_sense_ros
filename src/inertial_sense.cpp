@@ -34,25 +34,6 @@ InertialSenseROS::InertialSenseROS() :
   configure_parameters();
   configure_data_streams();
 
-  //Publish the first LLA reference
-  if (LLA_ref_.enabled)
-  {
-    std::vector<double> lla_ref_data(3,0);
-    if (nh_private_.hasParam("GPS_ref_lla"))
-    {
-      ROS_INFO("GETTING lla_ref_data");
-      nh_private_.getParam("GPS_ref_lla",lla_ref_data);
-    }
-    else
-      ROS_INFO("lla_ref_data not found.");
-    geometry_msgs::Vector3 lla_ref_msg;
-    lla_ref_msg.x = lla_ref_data[0];
-    lla_ref_msg.y = lla_ref_data[1];
-    lla_ref_msg.z = lla_ref_data[2];
-    LLA_ref_.pub.publish(lla_ref_msg);
-  }
-      
-
   nh_private_.param<bool>("enable_log", log_enabled_, false);
   if (log_enabled_)
   {
@@ -61,6 +42,19 @@ InertialSenseROS::InertialSenseROS() :
 
   configure_ascii_output();
   configure_rtk();
+
+  //Publish the first LLA reference
+  if (LLA_ref_.enabled)
+  {
+    std::vector<double> lla_ref_data(3,0);
+    if (nh_private_.hasParam("GPS_ref_lla"))
+      nh_private_.getParam("GPS_ref_lla",lla_ref_data);
+    geometry_msgs::Vector3 lla_ref_msg;
+    lla_ref_msg.x = lla_ref_data[0];
+    lla_ref_msg.y = lla_ref_data[1];
+    lla_ref_msg.z = lla_ref_data[2];
+    LLA_ref_.pub.publish(lla_ref_msg);
+  }
 
   initialized_ = true;
 }
