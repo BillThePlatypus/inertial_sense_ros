@@ -27,6 +27,7 @@
 #include "std_srvs/Trigger.h"
 #include "std_msgs/Header.h"
 #include "geometry_msgs/Vector3Stamped.h"
+#include "geometry_msgs/Vector3.h"
 
 # define GPS_UNIX_OFFSET 315964800 // GPS time started on 6/1/1980 while UNIX time started 1/1/1970 this is the difference between those in seconds
 # define LEAP_SECONDS 18 // GPS time does not have leap seconds, UNIX does (as of 1/1/2017 - next one is probably in 2020 sometime unless there is some crazy earthquake or nuclear blast)
@@ -97,6 +98,8 @@ private:
   void GPS_obs_callback(const obsd_t* const msg);
   void GPS_eph_callback(const eph_t* const msg);
   void GPS_geph_callback(const geph_t* const msg);
+
+  ros_stream_t LLA_ref_;
 
   ros_stream_t GPS_info_;
   void GPS_info_callback(const gps_sat_t* const msg);

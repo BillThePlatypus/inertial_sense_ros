@@ -34,6 +34,20 @@ InertialSenseROS::InertialSenseROS() :
   configure_parameters();
   configure_data_streams();
 
+  //Publish the first LLA reference
+  if (LLA_ref_.enabled)
+  {
+    std::vector<double> lla_ref_data(3,0);
+    if (nh_private_.hasParam("GPS_ref_lla"))
+      nh_private_.getParam("GPS_ref_lla",lla_ref_data);
+    geometry_msgs::Vector3 lla_ref_msg;
+    lla_ref_msg.x = lla_ref_data[0];
+    lla_ref_msg.y = lla_ref_data[1];
+    lla_ref_msg.z = lla_ref_data[2];
+    LLA_ref_.pub.publish(lla_ref_msg);
+  }
+      
+
   nh_private_.param<bool>("enable_log", log_enabled_, false);
   if (log_enabled_)
   {
@@ -75,7 +89,12 @@ void InertialSenseROS::configure_data_streams()
   // Set up the GPS ROS stream - we always need GPS information for time sync, just don't always need to publish it
   nh_private_.param<bool>("stream_GPS", GPS_.enabled, false);
   if (GPS_.enabled)
+  {
     GPS_.pub = nh_.advertise<inertial_sense::GPS>("gps", 1);
+    //The LLA reference point publisher. Latches, and only publishes on change
+    LLA_ref_.enabled = true;
+    LLA_ref_.pub = nh_.advertise<geometry_msgs::Vector3>("lla_ref",1,true);
+  }
 
   nh_private_.param<bool>("stream_GPS_raw", GPS_obs_.enabled, false);
   nh_private_.param<bool>("stream_GPS_raw", GPS_eph_.enabled, false);
