@@ -76,7 +76,7 @@ Topics are enabled and disabled using parameters.  By default, only the `ins` to
     - Satellite information and carrier noise ratio array for each satellite
 - `lla_ref`(geometry_msgs/Vector3)
     - Current LLA used for NED frame (Latched topic)
-    - Enabled with ~stream_GPS
+    - Enabled with `~stream_GPS`
 - `mag` (sensor_msgs/MagneticField)
     - Raw magnetic field measurement from magnetometer 1
 - `baro` (sensor_msgs/FluidPressure)
