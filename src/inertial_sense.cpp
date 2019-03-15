@@ -696,6 +696,15 @@ bool InertialSenseROS::set_refLLA_to_value(inertial_sense::refLLAUpdate::Request
   res.success = true;
   IS_.SendData(DID_FLASH_CONFIG, reinterpret_cast<uint8_t*>(&req.lla), sizeof(req.lla), offsetof(nvm_flash_cfg_t, refLla));
   ROS_INFO("refLLA Updated");
+  //Update the LLA reference topic, if enabled
+  if(LLA_ref_.enabled)
+  {
+    geometry_msgs::Vector3 msg;
+    msg.x = req.lla[0];
+    msg.y = req.lla[1];
+    msg.z = req.lla[2];
+    LLA_ref_.pub.publish(msg);
+  }
 }
 bool InertialSenseROS::perform_mag_cal_srv_callback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
 {
